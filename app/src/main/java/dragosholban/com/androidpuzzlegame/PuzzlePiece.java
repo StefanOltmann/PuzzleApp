@@ -2,7 +2,7 @@ package dragosholban.com.androidpuzzlegame;
 
 import android.content.Context;
 
-public class PuzzlePiece extends android.support.v7.widget.AppCompatImageView {
+public class PuzzlePiece extends androidx.appcompat.widget.AppCompatImageView {
     public int xCoord;
     public int yCoord;
     public int pieceWidth;
