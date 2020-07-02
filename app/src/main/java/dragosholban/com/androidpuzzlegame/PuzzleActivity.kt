@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import dragosholban.com.androidpuzzlegame.util.toast
 import java.io.IOException
 import java.util.*
+import kotlin.math.abs
+import kotlin.math.roundToInt
 
 class PuzzleActivity : AppCompatActivity() {
     private var pieces: ArrayList<PuzzlePiece?>? = null
@@ -106,10 +108,10 @@ class PuzzleActivity : AppCompatActivity() {
         val scaledBitmapTop = dimensions[1]
         val scaledBitmapWidth = dimensions[2]
         val scaledBitmapHeight = dimensions[3]
-        val croppedImageWidth = scaledBitmapWidth - 2 * Math.abs(scaledBitmapLeft)
-        val croppedImageHeight = scaledBitmapHeight - 2 * Math.abs(scaledBitmapTop)
+        val croppedImageWidth = scaledBitmapWidth - 2 * abs(scaledBitmapLeft)
+        val croppedImageHeight = scaledBitmapHeight - 2 * abs(scaledBitmapTop)
         val scaledBitmap = Bitmap.createScaledBitmap(bitmap, scaledBitmapWidth, scaledBitmapHeight, true)
-        val croppedBitmap = Bitmap.createBitmap(scaledBitmap, Math.abs(scaledBitmapLeft), Math.abs(scaledBitmapTop), croppedImageWidth, croppedImageHeight)
+        val croppedBitmap = Bitmap.createBitmap(scaledBitmap, abs(scaledBitmapLeft), abs(scaledBitmapTop), croppedImageWidth, croppedImageHeight)
 
         // Calculate the with and height of the pieces
         val pieceWidth = croppedImageWidth / cols
@@ -235,8 +237,8 @@ class PuzzleActivity : AppCompatActivity() {
         val origH = d.intrinsicHeight
 
         // Calculate the actual dimensions
-        val actW = Math.round(origW * scaleX)
-        val actH = Math.round(origH * scaleY)
+        val actW = (origW * scaleX).roundToInt()
+        val actH = (origH * scaleY).roundToInt()
         ret[2] = actW
         ret[3] = actH
 

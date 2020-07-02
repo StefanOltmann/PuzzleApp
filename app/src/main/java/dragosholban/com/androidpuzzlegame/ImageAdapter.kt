@@ -38,7 +38,11 @@ class ImageAdapter(private val mContext: Context) : BaseAdapter() {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val myView = if (convertView == null) {
             val layoutInflater = LayoutInflater.from(mContext);
-            layoutInflater.inflate(R.layout.grid_element, null);
+
+            // https://stackoverflow.com/a/17203281/3692788
+            // "false" means: use the parent to measure but do not attach to it,
+            // as it will be done after returning the view
+            layoutInflater.inflate(R.layout.grid_element, parent, false)
         } else {
             convertView
         }
