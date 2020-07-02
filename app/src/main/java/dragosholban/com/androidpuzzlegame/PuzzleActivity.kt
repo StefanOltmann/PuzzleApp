@@ -12,10 +12,11 @@ import dragosholban.com.androidpuzzlegame.util.toast
 import java.io.IOException
 import java.util.*
 import kotlin.math.abs
+import kotlin.math.min
 import kotlin.math.roundToInt
 
 class PuzzleActivity : AppCompatActivity() {
-    private var pieces: ArrayList<PuzzlePiece?>? = null
+    private lateinit var pieces: ArrayList<PuzzlePiece?>
     private var mCurrentPhotoPath: String? = null
     private var mCurrentPhotoUri: String? = null
 
@@ -46,9 +47,9 @@ class PuzzleActivity : AppCompatActivity() {
             val touchListener = TouchListener(this@PuzzleActivity)
 
             // shuffle pieces order
-            pieces?.shuffle()
+            pieces.shuffle()
 
-            pieces?.let {
+            pieces.let {
                 for (piece in it) {
                     piece?.setOnTouchListener(touchListener)
                     layout.addView(piece)
@@ -262,7 +263,7 @@ class PuzzleActivity : AppCompatActivity() {
 
     private val isGameOver: Boolean
         get() {
-            for (piece in pieces!!) {
+            for (piece in pieces) {
                 if (piece!!.canMove) {
                     return false
                 }
@@ -283,7 +284,7 @@ class PuzzleActivity : AppCompatActivity() {
         val photoH = bmOptions.outHeight
 
         // Determine how much to scale down the image
-        val scaleFactor = Math.min(photoW / targetW, photoH / targetH)
+        val scaleFactor = min(photoW / targetW, photoH / targetH)
 
         // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false

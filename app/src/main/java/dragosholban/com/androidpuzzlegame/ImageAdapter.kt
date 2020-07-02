@@ -12,26 +12,21 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import java.io.IOException
-import java.lang.ref.WeakReference
 import kotlin.math.min
 
-class ImageAdapter(private val mContext: Context) : BaseAdapter() {
+class ImageAdapter(private val mContext: Context, private var files: Array<String>) : BaseAdapter() {
     private val am: AssetManager = mContext.assets
 
-    private val files by lazy {
-        am.list("img")
-    }
-
     override fun getCount(): Int {
-        return files?.size ?: 0
+        return files.size ?: 0
     }
 
     override fun getItem(position: Int): Any? {
-        return null
+        return files[position]
     }
 
     override fun getItemId(position: Int): Long {
-        return 0
+        return position.toLong()
     }
 
     // create a new ImageView for each item referenced by the Adapter
@@ -47,7 +42,7 @@ class ImageAdapter(private val mContext: Context) : BaseAdapter() {
             convertView
         }
 
-        val imageView = myView.findViewById<ImageView>(R.id.gridImageview)
+        val imageView = myView.findViewById<ImageView>(R.id.gridImageView)
 
         imageView.setImageBitmap(null)
 
@@ -55,7 +50,7 @@ class ImageAdapter(private val mContext: Context) : BaseAdapter() {
         imageView.post {
             // Get bitmap from assets in background,
             DoAsync {
-                val bitmap = getPicFromAsset(imageView, files!![position])
+                val bitmap = getPicFromAsset(imageView, files[position])
 
                 // then set to the imageView in the UI thread
                 myView.post {
@@ -82,27 +77,29 @@ class ImageAdapter(private val mContext: Context) : BaseAdapter() {
         // Get the dimensions of the View
         val targetW = imageView.width
         val targetH = imageView.height
+
         return if (targetW == 0 || targetH == 0) {
             // view has no dimensions set
             null
         } else try {
-            val `is` = am.open("img/$assetName")
+            val inputStream = am.open("img/$assetName")
+
             // Get the dimensions of the bitmap
             val bmOptions = BitmapFactory.Options()
             bmOptions.inJustDecodeBounds = true
-            BitmapFactory.decodeStream(`is`, Rect(-1, -1, -1, -1), bmOptions)
+            BitmapFactory.decodeStream(inputStream, Rect(-1, -1, -1, -1), bmOptions)
             val photoW = bmOptions.outWidth
             val photoH = bmOptions.outHeight
 
             // Determine how much to scale down the image
             val scaleFactor = min(photoW / targetW, photoH / targetH)
-            `is`.reset()
+            inputStream.reset()
 
             // Decode the image file into a Bitmap sized to fill the View
             bmOptions.inJustDecodeBounds = false
             bmOptions.inSampleSize = scaleFactor
             bmOptions.inPurgeable = true
-            BitmapFactory.decodeStream(`is`, Rect(-1, -1, -1, -1), bmOptions)
+            BitmapFactory.decodeStream(inputStream, Rect(-1, -1, -1, -1), bmOptions)
         } catch (e: IOException) {
             e.printStackTrace()
             null

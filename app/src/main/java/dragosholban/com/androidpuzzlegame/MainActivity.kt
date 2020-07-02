@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import dragosholban.com.androidpuzzlegame.util.checkAndRequestPermission
 import dragosholban.com.androidpuzzlegame.util.toast
+import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -25,20 +26,22 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    var mCurrentPhotoPath: String? = null
+    private var mCurrentPhotoPath: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val am = assets
+
         try {
-            val files = am.list("img")
-            val grid = findViewById<GridView>(R.id.grid)
-            grid.adapter = ImageAdapter(this)
+            val files = am.list("img") ?: arrayOf<String>()
+
+            grid.adapter = ImageAdapter(this, files)
+
             grid.onItemClickListener = OnItemClickListener { adapterView, view, i, l ->
                 val intent = Intent(applicationContext, PuzzleActivity::class.java)
-                intent.putExtra("assetName", files!![i % files.size])
+                intent.putExtra("assetName", files[i % files.size])
                 startActivity(intent)
             }
         } catch (e: IOException) {
