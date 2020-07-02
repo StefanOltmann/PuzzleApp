@@ -12,6 +12,8 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import java.io.IOException
+import java.lang.ref.WeakReference
+import kotlin.math.min
 
 class ImageAdapter(private val mContext: Context) : BaseAdapter() {
     private val am: AssetManager = mContext.assets
@@ -44,23 +46,32 @@ class ImageAdapter(private val mContext: Context) : BaseAdapter() {
         val imageView = myView.findViewById<ImageView>(R.id.gridImageview)
 
         imageView.setImageBitmap(null)
-        // run image related code after the view was laid out
-        imageView.post {
-            object : AsyncTask<Void?, Void?, Void?>() {
-                private var bitmap: Bitmap? = null
 
-                override fun onPostExecute(aVoid: Void?) {
-                    super.onPostExecute(aVoid)
+        // Fetch the image after the view was laid out
+        imageView.post {
+            // Get bitmap from assets in background,
+            DoAsync {
+                val bitmap = getPicFromAsset(imageView, files!![position])
+
+                // then set to the imageView in the UI thread
+                myView.post {
                     imageView.setImageBitmap(bitmap)
                 }
-
-                override fun doInBackground(vararg voids: Void?): Void? {
-                    bitmap = getPicFromAsset(imageView, files!![position])
-                    return null
-                }
-            }.execute()
+            }
         }
+
         return myView
+    }
+
+    class DoAsync(val handler: () -> Unit) : AsyncTask<Void, Void, Void>() {
+        init {
+            execute()
+        }
+
+        override fun doInBackground(vararg params: Void?): Void? {
+            handler()
+            return null
+        }
     }
 
     private fun getPicFromAsset(imageView: ImageView, assetName: String): Bitmap? {
@@ -80,7 +91,7 @@ class ImageAdapter(private val mContext: Context) : BaseAdapter() {
             val photoH = bmOptions.outHeight
 
             // Determine how much to scale down the image
-            val scaleFactor = Math.min(photoW / targetW, photoH / targetH)
+            val scaleFactor = min(photoW / targetW, photoH / targetH)
             `is`.reset()
 
             // Decode the image file into a Bitmap sized to fill the View
