@@ -19,42 +19,52 @@ class TouchListener(private val activity: PuzzleActivity) : OnTouchListener {
 
         val x = motionEvent.rawX
         val y = motionEvent.rawY
-        val tolerance = sqrt(view.width.toDouble().pow(2.0) + view.height.toDouble().pow(2.0)) / 10
 
-        val piece = view as PuzzlePiece
+        val tolerance = sqrt(view.width.toDouble().pow(2.0)
+                + view.height.toDouble().pow(2.0)) / 10
 
-        if (!piece.canMove)
+        val puzzlePiece = view as PuzzlePiece
+
+        if (!puzzlePiece.canMove)
             return true
 
-        val lParams = view.getLayoutParams() as RelativeLayout.LayoutParams
+        val layoutParams = view.getLayoutParams() as RelativeLayout.LayoutParams
 
         when (motionEvent.action and MotionEvent.ACTION_MASK) {
 
             MotionEvent.ACTION_DOWN -> {
-                xDelta = x - lParams.leftMargin
-                yDelta = y - lParams.topMargin
-                piece.bringToFront()
+
+                xDelta = x - layoutParams.leftMargin
+                yDelta = y - layoutParams.topMargin
+                puzzlePiece.bringToFront()
             }
 
             MotionEvent.ACTION_MOVE -> {
-                lParams.leftMargin = (x - xDelta).toInt()
-                lParams.topMargin = (y - yDelta).toInt()
-                view.setLayoutParams(lParams)
+
+                layoutParams.leftMargin = (x - xDelta).toInt()
+                layoutParams.topMargin = (y - yDelta).toInt()
+                view.setLayoutParams(layoutParams)
             }
 
             MotionEvent.ACTION_UP -> {
-                val xDiff = StrictMath.abs(piece.xCoord - lParams.leftMargin)
-                val yDiff = StrictMath.abs(piece.yCoord - lParams.topMargin)
+
+                val xDiff = StrictMath.abs(puzzlePiece.xCoord - layoutParams.leftMargin)
+                val yDiff = StrictMath.abs(puzzlePiece.yCoord - layoutParams.topMargin)
+
                 if (xDiff <= tolerance && yDiff <= tolerance) {
-                    lParams.leftMargin = piece.xCoord
-                    lParams.topMargin = piece.yCoord
-                    piece.layoutParams = lParams
-                    piece.canMove = false
-                    sendViewToBack(piece)
+
+                    layoutParams.leftMargin = puzzlePiece.xCoord
+                    layoutParams.topMargin = puzzlePiece.yCoord
+                    puzzlePiece.layoutParams = layoutParams
+                    puzzlePiece.canMove = false
+
+                    sendViewToBack(puzzlePiece)
+
                     activity.checkGameOver()
                 }
             }
         }
+
         return true
     }
 

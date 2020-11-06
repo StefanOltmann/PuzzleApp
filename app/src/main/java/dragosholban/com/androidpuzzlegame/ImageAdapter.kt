@@ -1,11 +1,11 @@
 package dragosholban.com.androidpuzzlegame
 
 import android.content.Context
-import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Rect
 import android.os.AsyncTask
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,30 +14,28 @@ import android.widget.ImageView
 import java.io.IOException
 import kotlin.math.min
 
-class ImageAdapter(private val mContext: Context, private var files: Array<String>) : BaseAdapter() {
-    private val am: AssetManager = mContext.assets
+class ImageAdapter(
+        private val context: Context,
+        private var files: Array<String>) : BaseAdapter() {
 
-    override fun getCount(): Int {
-        return files.size ?: 0
-    }
+    override fun getCount() = files.size
 
-    override fun getItem(position: Int): Any? {
-        return files[position]
-    }
+    override fun getItem(position: Int) = files[position]
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
+    override fun getItemId(position: Int) = position.toLong()
 
     // create a new ImageView for each item referenced by the Adapter
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+
         val myView = if (convertView == null) {
-            val layoutInflater = LayoutInflater.from(mContext);
+
+            val layoutInflater = LayoutInflater.from(context)
 
             // https://stackoverflow.com/a/17203281/3692788
             // "false" means: use the parent to measure but do not attach to it,
             // as it will be done after returning the view
             layoutInflater.inflate(R.layout.grid_element, parent, false)
+
         } else {
             convertView
         }
@@ -48,9 +46,11 @@ class ImageAdapter(private val mContext: Context, private var files: Array<Strin
 
         // Fetch the image after the view was laid out
         imageView.post {
+
             // Get bitmap from assets in background,
             DoAsync {
-                val bitmap = getPicFromAsset(imageView, files[position])
+
+                val bitmap = loadBitmapFromAsset(imageView, files[position])
 
                 // then set to the imageView in the UI thread
                 myView.post {
@@ -63,6 +63,7 @@ class ImageAdapter(private val mContext: Context, private var files: Array<Strin
     }
 
     class DoAsync(val handler: () -> Unit) : AsyncTask<Void, Void, Void>() {
+
         init {
             execute()
         }
@@ -73,37 +74,46 @@ class ImageAdapter(private val mContext: Context, private var files: Array<Strin
         }
     }
 
-    private fun getPicFromAsset(imageView: ImageView, assetName: String): Bitmap? {
-        // Get the dimensions of the View
-        val targetW = imageView.width
-        val targetH = imageView.height
+    private fun loadBitmapFromAsset(imageView: ImageView, assetName: String): Bitmap? {
 
-        return if (targetW == 0 || targetH == 0) {
-            // view has no dimensions set
-            null
-        } else try {
-            val inputStream = am.open("img/$assetName")
+        // Get the dimensions of the View
+        val targetWidth = imageView.width
+        val targetHeight = imageView.height
+
+        // If the view has no dimensions set return here
+        if (targetWidth == 0 || targetHeight == 0)
+            return null
+
+        try {
+
+            val inputStream = context.assets.open("img/$assetName")
+
+            val padding = Rect(-1, -1, -1, -1)
 
             // Get the dimensions of the bitmap
-            val bmOptions = BitmapFactory.Options()
-            bmOptions.inJustDecodeBounds = true
-            BitmapFactory.decodeStream(inputStream, Rect(-1, -1, -1, -1), bmOptions)
-            val photoW = bmOptions.outWidth
-            val photoH = bmOptions.outHeight
+            val bitmapOptions = BitmapFactory.Options()
+            bitmapOptions.inJustDecodeBounds = true
+
+            BitmapFactory.decodeStream(inputStream, padding, bitmapOptions)
+
+            val photoWidth = bitmapOptions.outWidth
+            val photoHeight = bitmapOptions.outHeight
 
             // Determine how much to scale down the image
-            val scaleFactor = min(photoW / targetW, photoH / targetH)
+            val scaleFactor = min(photoWidth / targetWidth, photoHeight / targetHeight)
+
             inputStream.reset()
 
             // Decode the image file into a Bitmap sized to fill the View
-            bmOptions.inJustDecodeBounds = false
-            bmOptions.inSampleSize = scaleFactor
-            bmOptions.inPurgeable = true
-            BitmapFactory.decodeStream(inputStream, Rect(-1, -1, -1, -1), bmOptions)
-        } catch (e: IOException) {
-            e.printStackTrace()
-            null
+            bitmapOptions.inJustDecodeBounds = false
+            bitmapOptions.inSampleSize = scaleFactor
+            //bitmapOptions.inPurgeable = true
+
+            return BitmapFactory.decodeStream(inputStream, padding, bitmapOptions)
+
+        } catch (ex: IOException) {
+            Log.d("ImageAdapter", ex.localizedMessage ?: "")
+            return null
         }
     }
-
 }
