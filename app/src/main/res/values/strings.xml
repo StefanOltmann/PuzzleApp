@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Puzzle Game</string>
+    <string name="app_name">Puzzle</string>
 
     <!-- Camera permission request -->
     <string name="dialog_camera_title">Camera permission</string>
