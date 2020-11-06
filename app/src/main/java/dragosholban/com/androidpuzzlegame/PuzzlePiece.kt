@@ -3,7 +3,8 @@ package dragosholban.com.androidpuzzlegame
 import android.content.Context
 import androidx.appcompat.widget.AppCompatImageView
 
-class PuzzlePiece(context: Context?) : AppCompatImageView(context) {
+class PuzzlePiece(context: Context) : AppCompatImageView(context) {
+
     @JvmField
     var xCoord = 0
 

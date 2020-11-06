@@ -82,10 +82,10 @@ class MainActivity : AppCompatActivity() {
         // Log.d("MainActivity", "starting capturePhoto() method")
 
         // Create a File for the item photo
-        val photoFile: File?
+        val photoFile: File
 
-        photoFile = try {
-            createDestinationFile()
+        try {
+            photoFile = createDestinationFile()
         } catch (ex: IOException) {
             Log.d("MainActivity", "createDestinationFile() fails => ${ex.localizedMessage}")
             return

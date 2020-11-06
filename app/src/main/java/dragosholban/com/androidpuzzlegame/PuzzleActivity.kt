@@ -16,12 +16,14 @@ import kotlin.math.min
 import kotlin.math.roundToInt
 
 class PuzzleActivity : AppCompatActivity() {
+
     private lateinit var pieces: ArrayList<PuzzlePiece?>
     private var mCurrentPhotoPath: String? = null
     private var mCurrentPhotoUri: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_puzzle)
 
         val layout = findViewById<RelativeLayout>(R.id.layout)
@@ -35,6 +37,7 @@ class PuzzleActivity : AppCompatActivity() {
         // run image related code after the view was laid out
         // to have all dimensions calculated
         imageView.post {
+
             if (assetName != null) {
                 setPicFromAsset(assetName, imageView)
             } else if (mCurrentPhotoPath != null) {
@@ -95,6 +98,7 @@ class PuzzleActivity : AppCompatActivity() {
     }
 
     private fun splitImage(): ArrayList<PuzzlePiece?> {
+
         val piecesNumber = 12
         val rows = 4
         val cols = 3
@@ -220,7 +224,9 @@ class PuzzleActivity : AppCompatActivity() {
     }
 
     private fun getBitmapPositionInsideImageView(imageView: ImageView?): IntArray {
+
         val ret = IntArray(4)
+
         if (imageView == null || imageView.drawable == null) return ret
 
         // Get image dimensions
@@ -256,18 +262,28 @@ class PuzzleActivity : AppCompatActivity() {
     }
 
     fun checkGameOver() {
+
         if (isGameOver) {
-            finish()
+
+            Thread() {
+
+                // Let the user see the finished puzzle for
+                // a second before going back.
+                Thread.sleep(1000)
+
+                finish()
+
+            }.start()
         }
     }
 
     private val isGameOver: Boolean
         get() {
-            for (piece in pieces) {
-                if (piece!!.canMove) {
+
+            for (piece in pieces)
+                if (piece!!.canMove)
                     return false
-                }
-            }
+
             return true
         }
 
@@ -313,8 +329,7 @@ class PuzzleActivity : AppCompatActivity() {
             val matrix = Matrix()
             matrix.postRotate(angle)
 
-            return Bitmap
-                    .createBitmap(source, 0, 0, source.width, source.height, matrix, true)
+            return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
         }
     }
 }
