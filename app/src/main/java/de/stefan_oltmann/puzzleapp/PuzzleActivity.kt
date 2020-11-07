@@ -130,8 +130,6 @@ class PuzzleActivity : AppCompatActivity() {
 
         val puzzlePieceViews = mutableListOf<PuzzlePieceView>()
 
-        val imageView = findViewById<ImageView>(R.id.puzzle_background_image_view)
-
         // Get the scaled bitmap of the source image
         val drawable = imageView.drawable as BitmapDrawable
         val bitmap = drawable.bitmap
