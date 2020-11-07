@@ -60,7 +60,7 @@ class PuzzleActivity : AppCompatActivity() {
                 imageView.setImageURI(Uri.parse(currentPhotoUri))
             }
 
-            puzzlePieceViews = createShuffledPuzzlePieces()
+            puzzlePieceViews = createShuffledPuzzlePieceViews()
 
             val touchListener = TouchListener(this@PuzzleActivity)
 
@@ -125,10 +125,10 @@ class PuzzleActivity : AppCompatActivity() {
         }
     }
 
-    private fun createShuffledPuzzlePieces(
+    private fun createShuffledPuzzlePieceViews(
             rows: Int = 3, cols: Int = 4): List<PuzzlePieceView> {
 
-        val pieces = mutableListOf<PuzzlePieceView>()
+        val puzzlePieceViews = mutableListOf<PuzzlePieceView>()
 
         val imageView = findViewById<ImageView>(R.id.puzzle_background_image_view)
 
@@ -179,7 +179,7 @@ class PuzzleActivity : AppCompatActivity() {
 
                 val bumpSize = puzzlePieceHeight / 2.3f
 
-                val path = createPath(
+                val path = createPuzzlePiecePath(
                         bumpSize,
                         offsetX, offsetY,
                         row, col, cols, rows,
@@ -230,7 +230,7 @@ class PuzzleActivity : AppCompatActivity() {
                 puzzlePieceView.setImageBitmap(finalPuzzlePieceBitmap)
 
                 // add the piece to the list
-                pieces.add(puzzlePieceView)
+                puzzlePieceViews.add(puzzlePieceView)
 
                 posX += puzzlePieceWidth
             }
@@ -238,12 +238,17 @@ class PuzzleActivity : AppCompatActivity() {
             posY += puzzlePieceHeight
         }
 
-        pieces.shuffle()
+        puzzlePieceViews.shuffle()
 
-        return pieces.toList()
+        return puzzlePieceViews.toList()
     }
 
-    private fun createPath(bumpSize: Float, offsetX: Int, offsetY: Int, row: Int, col: Int, cols: Int, rows: Int, puzzlePieceBitmapWidth: Int, puzzlePieceBitmapHeight: Int): Path {
+    private fun createPuzzlePiecePath(
+            bumpSize: Float,
+            offsetX: Int, offsetY: Int,
+            row: Int, col: Int,
+            cols: Int, rows: Int,
+            puzzlePieceBitmapWidth: Int, puzzlePieceBitmapHeight: Int): Path {
 
         val path = Path()
 
