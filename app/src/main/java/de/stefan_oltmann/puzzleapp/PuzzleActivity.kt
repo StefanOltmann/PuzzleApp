@@ -262,7 +262,9 @@ class PuzzleActivity : AppCompatActivity() {
 
         if (topSidePiece) {
 
-            path.lineTo(puzzlePieceBitmapWidth.toFloat(), offsetY.toFloat())
+            path.lineTo(
+                    puzzlePieceBitmapWidth.toFloat(),
+                    offsetY.toFloat())
 
         } else {
 
@@ -279,7 +281,9 @@ class PuzzleActivity : AppCompatActivity() {
                     offsetX + puzzlePieceWidth / 3f * 2f,
                     offsetY.toFloat())
 
-            path.lineTo(puzzlePieceBitmapWidth.toFloat(), offsetY.toFloat())
+            path.lineTo(
+                    puzzlePieceBitmapWidth.toFloat(),
+                    offsetY.toFloat())
         }
 
         if (rightSidePiece) {
@@ -330,7 +334,9 @@ class PuzzleActivity : AppCompatActivity() {
                     offsetX + puzzlePieceWidth / 3f,
                     puzzlePieceBitmapHeight.toFloat())
 
-            path.lineTo(offsetX.toFloat(), puzzlePieceBitmapHeight.toFloat())
+            path.lineTo(
+                    offsetX.toFloat(),
+                    puzzlePieceBitmapHeight.toFloat())
         }
 
         if (leftSidePiece) {
