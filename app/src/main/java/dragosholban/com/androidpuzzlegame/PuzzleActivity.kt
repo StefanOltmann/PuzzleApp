@@ -17,7 +17,7 @@ import kotlin.math.roundToInt
 
 class PuzzleActivity : AppCompatActivity() {
 
-    private lateinit var pieces: List<PuzzlePiece>
+    private lateinit var puzzlePieces: List<PuzzlePiece>
 
     private var currentPhotoPath: String? = null
     private var currentPhotoUri: String? = null
@@ -25,7 +25,7 @@ class PuzzleActivity : AppCompatActivity() {
     private val isGameOver : Boolean
         get() {
 
-            for (piece in pieces)
+            for (piece in puzzlePieces)
                 if (piece.canMove)
                     return false
 
@@ -62,23 +62,21 @@ class PuzzleActivity : AppCompatActivity() {
                 imageView.setImageURI(Uri.parse(currentPhotoUri))
             }
 
-            pieces = createShuffledPuzzlePieces()
+            puzzlePieces = createShuffledPuzzlePieces()
 
             val touchListener = TouchListener(this@PuzzleActivity)
 
-            pieces.let {
-                for (piece in it) {
+            for (puzzlePiece in puzzlePieces) {
 
-                    piece.setOnTouchListener(touchListener)
+                puzzlePiece.setOnTouchListener(touchListener)
 
-                    layout.addView(piece)
+                layout.addView(puzzlePiece)
 
-                    // randomize position, on the bottom of the screen
-                    val layoutParams = piece.layoutParams as RelativeLayout.LayoutParams
-                    layoutParams.leftMargin = Random().nextInt(layout.width - piece.pieceWidth)
-                    layoutParams.topMargin = layout.height - piece.pieceHeight
-                    piece.layoutParams = layoutParams
-                }
+                // randomize position, on the bottom of the screen
+                val layoutParams = puzzlePiece.layoutParams as RelativeLayout.LayoutParams
+                layoutParams.leftMargin = Random().nextInt(layout.width - puzzlePiece.pieceWidth)
+                layoutParams.topMargin = layout.height - puzzlePiece.pieceHeight
+                puzzlePiece.layoutParams = layoutParams
             }
         }
     }
