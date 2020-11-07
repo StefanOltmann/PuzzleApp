@@ -70,9 +70,9 @@ class MainActivity : AppCompatActivity() {
 
         } else {
 
-            val intent = Intent(Intent.ACTION_GET_CONTENT)
-            intent.type = "image/*"
-            startActivityForResult(intent, REQUEST_IMAGE_GALLERY)
+            val photoPickerIntent = Intent(Intent.ACTION_PICK)
+            photoPickerIntent.type = "image/*"
+            startActivityForResult(photoPickerIntent, REQUEST_IMAGE_GALLERY)
         }
     }
 }
