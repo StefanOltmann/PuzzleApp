@@ -181,7 +181,7 @@ class PuzzleActivity : AppCompatActivity() {
                         Bitmap.Config.ARGB_8888)
 
                 // draw path
-                val bumpSize = pieceHeight / 4
+                val bumpSize = pieceHeight / 2.3
 
                 val canvas = Canvas(puzzlePiece)
 
@@ -208,9 +208,9 @@ class PuzzleActivity : AppCompatActivity() {
                     path.cubicTo(
                             offsetX + (pieceBitmap.width - offsetX) / 6f,
                             offsetY - bumpSize.toFloat(),
-                            offsetX + (pieceBitmap.width - offsetX) / 6 * 5f,
+                            offsetX + (pieceBitmap.width - offsetX) / 6f * 5f,
                             offsetY - bumpSize.toFloat(),
-                            offsetX + (pieceBitmap.width - offsetX) / 3 * 2f,
+                            offsetX + (pieceBitmap.width - offsetX) / 3f * 2f,
                             offsetY.toFloat())
 
                     path.lineTo(pieceBitmap.width.toFloat(), offsetY.toFloat())
@@ -234,9 +234,9 @@ class PuzzleActivity : AppCompatActivity() {
                             pieceBitmap.width - bumpSize.toFloat(),
                             offsetY + (pieceBitmap.height - offsetY) / 6f,
                             pieceBitmap.width - bumpSize.toFloat(),
-                            offsetY + (pieceBitmap.height - offsetY) / 6 * 5f,
+                            offsetY + (pieceBitmap.height - offsetY) / 6f * 5f,
                             pieceBitmap.width.toFloat(),
-                            offsetY + (pieceBitmap.height - offsetY) / 3 * 2f)
+                            offsetY + (pieceBitmap.height - offsetY) / 3f * 2f)
 
                     path.lineTo(
                             pieceBitmap.width.toFloat(),
@@ -253,11 +253,11 @@ class PuzzleActivity : AppCompatActivity() {
 
                     // bottom bump
                     path.lineTo(
-                            offsetX + (pieceBitmap.width - offsetX) / 3 * 2f,
+                            offsetX + (pieceBitmap.width - offsetX) / 3f * 2f,
                             pieceBitmap.height.toFloat())
 
                     path.cubicTo(
-                            offsetX + (pieceBitmap.width - offsetX) / 6 * 5f,
+                            offsetX + (pieceBitmap.width - offsetX) / 6f * 5f,
                             pieceBitmap.height - bumpSize.toFloat(),
                             offsetX + (pieceBitmap.width - offsetX) / 6f,
                             pieceBitmap.height - bumpSize.toFloat(),
@@ -276,11 +276,11 @@ class PuzzleActivity : AppCompatActivity() {
                     // left bump
                     path.lineTo(
                             offsetX.toFloat(),
-                            offsetY + (pieceBitmap.height - offsetY) / 3 * 2f)
+                            offsetY + (pieceBitmap.height - offsetY) / 3f * 2f)
 
                     path.cubicTo(
                             offsetX - bumpSize.toFloat(),
-                            offsetY + (pieceBitmap.height - offsetY) / 6 * 5f,
+                            offsetY + (pieceBitmap.height - offsetY) / 6f * 5f,
                             offsetX - bumpSize.toFloat(),
                             offsetY + (pieceBitmap.height - offsetY) / 6f,
                             offsetX.toFloat(),
