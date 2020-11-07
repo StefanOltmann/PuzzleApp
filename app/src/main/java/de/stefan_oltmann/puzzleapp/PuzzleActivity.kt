@@ -17,6 +17,14 @@ class PuzzleActivity : AppCompatActivity() {
 
     private lateinit var puzzlePieces: List<PuzzlePiece>
 
+    private val puzzlePieceLayer: RelativeLayout by lazy {
+        findViewById(R.id.puzzle_piece_layer)
+    }
+
+    private val imageView: ImageView by lazy {
+        findViewById(R.id.puzzle_background_image_view)
+    }
+
     private val isGameOver: Boolean
         get() {
 
@@ -31,9 +39,6 @@ class PuzzleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_puzzle)
-
-        val layout = findViewById<RelativeLayout>(R.id.layout)
-        val imageView = findViewById<ImageView>(R.id.puzzle_background_image_view)
 
         val assetName = intent.getStringExtra("assetName")
 
@@ -60,7 +65,7 @@ class PuzzleActivity : AppCompatActivity() {
 
                 puzzlePiece.setOnTouchListener(touchListener)
 
-                layout.addView(puzzlePiece)
+                puzzlePieceLayer.addView(puzzlePiece)
 
                 // randomize position at the sides, half and half
 
@@ -69,9 +74,9 @@ class PuzzleActivity : AppCompatActivity() {
                 if (index % 2 == 0)
                     layoutParams.leftMargin = 0
                 else
-                    layoutParams.leftMargin = layout.width - puzzlePiece.pieceWidth
+                    layoutParams.leftMargin = puzzlePieceLayer.width - puzzlePiece.pieceWidth
 
-                layoutParams.topMargin = (0 until layout.height - puzzlePiece.pieceHeight).random()
+                layoutParams.topMargin = (0 until puzzlePieceLayer.height - puzzlePiece.pieceHeight).random()
 
                 puzzlePiece.layoutParams = layoutParams
             }
@@ -373,11 +378,15 @@ class PuzzleActivity : AppCompatActivity() {
 
         if (isGameOver) {
 
+            // Make the image fully visible and remove the puzzle pieces
+            imageView.alpha = 1.0f
+            puzzlePieceLayer.removeAllViews()
+
             Thread {
 
                 // Let the user see the finished puzzle for
-                // a second before going back.
-                Thread.sleep(1000)
+                // some seconds before going back.
+                Thread.sleep(3000)
 
                 finish()
 
