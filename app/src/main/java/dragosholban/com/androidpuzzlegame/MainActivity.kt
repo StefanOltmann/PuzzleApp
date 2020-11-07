@@ -5,22 +5,14 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView.OnItemClickListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
-import dragosholban.com.androidpuzzlegame.util.checkAndRequestPermission
-import dragosholban.com.androidpuzzlegame.util.toast
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.File
 import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         try {
 
-            val files = assets.list("images") ?: arrayOf<String>()
+            val files = assets.list("img") ?: arrayOf<String>()
 
             grid.adapter = ImageAdapter(this, files)
 
@@ -48,8 +40,8 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
 
-        } catch (e: IOException) {
-            toast(e.localizedMessage ?: "")
+        } catch (ex: IOException) {
+            Log.e("MainActivity", ex.message ?: "")
         }
     }
 

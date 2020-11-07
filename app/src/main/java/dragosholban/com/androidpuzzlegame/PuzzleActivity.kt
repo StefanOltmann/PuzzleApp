@@ -2,13 +2,12 @@ package dragosholban.com.androidpuzzlegame
 
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
-import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import dragosholban.com.androidpuzzlegame.util.toast
 import java.io.IOException
 import java.util.*
 import kotlin.math.abs
@@ -110,8 +109,8 @@ class PuzzleActivity : AppCompatActivity() {
 
             imageView.setImageBitmap(bitmap)
 
-        } catch (e: IOException) {
-            toast(e.localizedMessage ?: "")
+        } catch (ex: IOException) {
+            Log.e("PuzzleActivity", ex.message ?: "")
         }
     }
 

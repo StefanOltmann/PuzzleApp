@@ -55,7 +55,9 @@ class TouchListener(private val activity: PuzzleActivity) : OnTouchListener {
 
                     layoutParams.leftMargin = puzzlePiece.xCoord
                     layoutParams.topMargin = puzzlePiece.yCoord
+
                     puzzlePiece.layoutParams = layoutParams
+
                     puzzlePiece.canMove = false
 
                     sendViewToBack(puzzlePiece)
@@ -68,9 +70,9 @@ class TouchListener(private val activity: PuzzleActivity) : OnTouchListener {
         return true
     }
 
-    private fun sendViewToBack(child: View?) {
+    private fun sendViewToBack(child: View) {
 
-        val parent = child?.parent as ViewGroup
+        val parent = child.parent as ViewGroup
 
         parent.removeView(child)
         parent.addView(child, 0)

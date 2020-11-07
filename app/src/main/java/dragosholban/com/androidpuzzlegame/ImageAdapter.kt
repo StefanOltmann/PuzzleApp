@@ -112,7 +112,7 @@ class ImageAdapter(
             return BitmapFactory.decodeStream(inputStream, padding, bitmapOptions)
 
         } catch (ex: IOException) {
-            Log.d("ImageAdapter", ex.localizedMessage ?: "")
+            Log.e("ImageAdapter", ex.message ?: "")
             return null
         }
     }
