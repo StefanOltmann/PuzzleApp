@@ -11,8 +11,8 @@ import kotlin.math.sqrt
 
 class TouchListener(private val activity: PuzzleActivity) : OnTouchListener {
 
-    private var xDelta = 0f
-    private var yDelta = 0f
+    private var deltaX = 0f
+    private var deltaY = 0f
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
@@ -20,12 +20,9 @@ class TouchListener(private val activity: PuzzleActivity) : OnTouchListener {
         val x = motionEvent.rawX
         val y = motionEvent.rawY
 
-        val tolerance = sqrt(view.width.toDouble().pow(2.0)
-                + view.height.toDouble().pow(2.0)) / 10
+        val puzzlePieceView = view as PuzzlePieceView
 
-        val puzzlePiece = view as PuzzlePieceView
-
-        if (!puzzlePiece.canMove)
+        if (!puzzlePieceView.canMove)
             return true
 
         val layoutParams = view.getLayoutParams() as RelativeLayout.LayoutParams
@@ -34,33 +31,38 @@ class TouchListener(private val activity: PuzzleActivity) : OnTouchListener {
 
             MotionEvent.ACTION_DOWN -> {
 
-                xDelta = x - layoutParams.leftMargin
-                yDelta = y - layoutParams.topMargin
-                puzzlePiece.bringToFront()
+                deltaX = x - layoutParams.leftMargin
+                deltaY = y - layoutParams.topMargin
+
+                puzzlePieceView.bringToFront()
             }
 
             MotionEvent.ACTION_MOVE -> {
 
-                layoutParams.leftMargin = (x - xDelta).toInt()
-                layoutParams.topMargin = (y - yDelta).toInt()
+                layoutParams.leftMargin = (x - deltaX).toInt()
+                layoutParams.topMargin = (y - deltaY).toInt()
+
                 view.setLayoutParams(layoutParams)
             }
 
             MotionEvent.ACTION_UP -> {
 
-                val xDiff = StrictMath.abs(puzzlePiece.posX - layoutParams.leftMargin)
-                val yDiff = StrictMath.abs(puzzlePiece.posY - layoutParams.topMargin)
+                val diffX = StrictMath.abs(puzzlePieceView.posX - layoutParams.leftMargin)
+                val diffY = StrictMath.abs(puzzlePieceView.posY - layoutParams.topMargin)
 
-                if (xDiff <= tolerance && yDiff <= tolerance) {
+                val tolerance = sqrt(view.width.toDouble().pow(2.0)
+                        + view.height.toDouble().pow(2.0)) / 10
 
-                    layoutParams.leftMargin = puzzlePiece.posX
-                    layoutParams.topMargin = puzzlePiece.posY
+                if (diffX <= tolerance && diffY <= tolerance) {
 
-                    puzzlePiece.layoutParams = layoutParams
+                    layoutParams.leftMargin = puzzlePieceView.posX
+                    layoutParams.topMargin = puzzlePieceView.posY
 
-                    puzzlePiece.canMove = false
+                    puzzlePieceView.layoutParams = layoutParams
 
-                    sendViewToBack(puzzlePiece)
+                    puzzlePieceView.canMove = false
+
+                    sendViewToBack(puzzlePieceView)
 
                     activity.checkGameOver()
                 }
