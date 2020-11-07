@@ -56,16 +56,23 @@ class PuzzleActivity : AppCompatActivity() {
 
             val touchListener = TouchListener(this@PuzzleActivity)
 
-            for (puzzlePiece in puzzlePieces) {
+            for ((index, puzzlePiece) in puzzlePieces.withIndex()) {
 
                 puzzlePiece.setOnTouchListener(touchListener)
 
                 layout.addView(puzzlePiece)
 
-                // randomize position, on the bottom of the screen
+                // randomize position at the sides, half and half
+
                 val layoutParams = puzzlePiece.layoutParams as RelativeLayout.LayoutParams
-                layoutParams.leftMargin = (0 until layout.width - puzzlePiece.pieceWidth).random()
-                layoutParams.topMargin = layout.height - puzzlePiece.pieceHeight
+
+                if (index % 2 == 0)
+                    layoutParams.leftMargin = 0
+                else
+                    layoutParams.leftMargin = layout.width - puzzlePiece.pieceWidth
+
+                layoutParams.topMargin = (0 until layout.height - puzzlePiece.pieceHeight).random()
+
                 puzzlePiece.layoutParams = layoutParams
             }
         }
@@ -111,7 +118,7 @@ class PuzzleActivity : AppCompatActivity() {
     }
 
     private fun createShuffledPuzzlePieces(
-            rows: Int = 4, cols: Int = 3): List<PuzzlePiece> {
+            rows: Int = 3, cols: Int = 4): List<PuzzlePiece> {
 
         val pieces = mutableListOf<PuzzlePiece>()
 

@@ -3,4 +3,5 @@
     <dimen name="puzzle_background_image_view_alpha">0.25</dimen>
     <dimen name="default_margin">8dp</dimen>
     <dimen name="default_fab_margin">16dp</dimen>
+    <dimen name="puzzle_piece_placeholder">128dp</dimen>
 </resources>

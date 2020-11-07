@@ -7,33 +7,45 @@
     tools:context=".PuzzleActivity"
     android:background="@drawable/table_background">
 
-    <ImageView
+    <View
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginEnd="@dimen/default_margin"
-        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginStart="@dimen/puzzle_piece_placeholder"
+        android:layout_marginLeft="@dimen/puzzle_piece_placeholder"
         android:layout_marginTop="@dimen/default_margin"
-        app:layout_constraintDimensionRatio="H,4:5"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/puzzle_frame" />
-
-    <ImageView
-        android:id="@+id/puzzle_background_image_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:alpha="@dimen/puzzle_background_image_view_alpha"
+        android:layout_marginEnd="@dimen/puzzle_piece_placeholder"
+        android:layout_marginRight="@dimen/puzzle_piece_placeholder"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:background="@drawable/image_frame_border"
         android:scaleType="centerCrop"
-        app:layout_constraintDimensionRatio="H,4:5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="h,3:2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/puzzle_background_image_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/puzzle_piece_placeholder"
+        android:layout_marginLeft="@dimen/puzzle_piece_placeholder"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/puzzle_piece_placeholder"
+        android:layout_marginRight="@dimen/puzzle_piece_placeholder"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:alpha="@dimen/puzzle_background_image_view_alpha"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="h,3:2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
     <RelativeLayout
         android:id="@+id/layout"

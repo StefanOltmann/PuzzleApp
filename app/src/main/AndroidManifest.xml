@@ -17,7 +17,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +25,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".PuzzleActivity" />
+        <activity
+            android:name=".PuzzleActivity"
+            android:screenOrientation="landscape"
+            tools:ignore="LockedOrientationActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
