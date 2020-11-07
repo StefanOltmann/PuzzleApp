@@ -48,13 +48,13 @@ class TouchListener(private val activity: PuzzleActivity) : OnTouchListener {
 
             MotionEvent.ACTION_UP -> {
 
-                val xDiff = StrictMath.abs(puzzlePiece.xCoord - layoutParams.leftMargin)
-                val yDiff = StrictMath.abs(puzzlePiece.yCoord - layoutParams.topMargin)
+                val xDiff = StrictMath.abs(puzzlePiece.posX - layoutParams.leftMargin)
+                val yDiff = StrictMath.abs(puzzlePiece.posY - layoutParams.topMargin)
 
                 if (xDiff <= tolerance && yDiff <= tolerance) {
 
-                    layoutParams.leftMargin = puzzlePiece.xCoord
-                    layoutParams.topMargin = puzzlePiece.yCoord
+                    layoutParams.leftMargin = puzzlePiece.posX
+                    layoutParams.topMargin = puzzlePiece.posY
 
                     puzzlePiece.layoutParams = layoutParams
 

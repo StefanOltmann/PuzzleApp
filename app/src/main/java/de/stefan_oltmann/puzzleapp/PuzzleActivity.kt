@@ -155,8 +155,8 @@ class PuzzleActivity : AppCompatActivity() {
             for (col in 0 until cols) {
 
                 // calculate offset for each piece
-                var offsetX = if (col > 0) pieceWidth / 3 else 0
-                var offsetY = if (row > 0) pieceHeight / 3 else 0
+                val offsetX = if (col > 0) pieceWidth / 3 else 0
+                val offsetY = if (row > 0) pieceHeight / 3 else 0
 
                 // apply the offset to each piece
                 val pieceBitmap = Bitmap.createBitmap(
@@ -169,8 +169,8 @@ class PuzzleActivity : AppCompatActivity() {
                 val piece = PuzzlePiece(applicationContext)
 
                 piece.setImageBitmap(pieceBitmap)
-                piece.xCoord = posX - offsetX + imageView.left
-                piece.yCoord = posY - offsetY + imageView.top
+                piece.posX = posX - offsetX + imageView.left
+                piece.posY = posY - offsetY + imageView.top
                 piece.pieceWidth = pieceWidth + offsetX
                 piece.pieceHeight = pieceHeight + offsetY
 
@@ -189,10 +189,10 @@ class PuzzleActivity : AppCompatActivity() {
 
                 path.moveTo(offsetX.toFloat(), offsetY.toFloat())
 
-                var topSidePiece = row == 0
-                var rightSidePiece = col == cols - 1
-                var bottomSidePiece = row == rows - 1
-                var leftSidePiece = col == 0
+                val topSidePiece = row == 0
+                val rightSidePiece = col == cols - 1
+                val bottomSidePiece = row == rows - 1
+                val leftSidePiece = col == 0
 
                 if (topSidePiece) {
 

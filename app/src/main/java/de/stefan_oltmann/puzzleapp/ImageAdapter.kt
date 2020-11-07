@@ -107,7 +107,6 @@ class ImageAdapter(
             // Decode the image file into a Bitmap sized to fill the View
             bitmapOptions.inJustDecodeBounds = false
             bitmapOptions.inSampleSize = scaleFactor
-            //bitmapOptions.inPurgeable = true
 
             return BitmapFactory.decodeStream(inputStream, padding, bitmapOptions)
 
