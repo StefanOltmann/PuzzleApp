@@ -8,7 +8,7 @@
     android:background="@drawable/puzzle_frame">
 
     <ImageView
-        android:id="@+id/gridImageView"
+        android:id="@+id/grid_image_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleType="centerCrop"

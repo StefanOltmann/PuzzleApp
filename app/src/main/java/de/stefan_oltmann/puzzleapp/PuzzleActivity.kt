@@ -33,7 +33,7 @@ class PuzzleActivity : AppCompatActivity() {
         setContentView(R.layout.activity_puzzle)
 
         val layout = findViewById<RelativeLayout>(R.id.layout)
-        val imageView = findViewById<ImageView>(R.id.imageView)
+        val imageView = findViewById<ImageView>(R.id.puzzle_background_image_view)
 
         val assetName = intent.getStringExtra("assetName")
 
@@ -115,7 +115,7 @@ class PuzzleActivity : AppCompatActivity() {
 
         val pieces = mutableListOf<PuzzlePiece>()
 
-        val imageView = findViewById<ImageView>(R.id.imageView)
+        val imageView = findViewById<ImageView>(R.id.puzzle_background_image_view)
 
         // Get the scaled bitmap of the source image
         val drawable = imageView.drawable as BitmapDrawable

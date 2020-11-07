@@ -40,7 +40,7 @@ class ImageAdapter(
             convertView
         }
 
-        val imageView = myView.findViewById<ImageView>(R.id.gridImageView)
+        val imageView = myView.findViewById<ImageView>(R.id.grid_image_view)
 
         imageView.setImageBitmap(null)
 
