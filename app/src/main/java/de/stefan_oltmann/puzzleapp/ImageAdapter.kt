@@ -1,4 +1,4 @@
-package dragosholban.com.androidpuzzlegame
+package de.stefan_oltmann.puzzleapp
 
 import android.content.Context
 import android.graphics.Bitmap

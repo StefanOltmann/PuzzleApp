@@ -1,4 +1,4 @@
-package dragosholban.com.androidpuzzlegame
+package de.stefan_oltmann.puzzleapp
 
 import android.Manifest
 import android.app.Activity

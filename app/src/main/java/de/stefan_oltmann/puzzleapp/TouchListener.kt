@@ -1,4 +1,4 @@
-package dragosholban.com.androidpuzzlegame
+package de.stefan_oltmann.puzzleapp
 
 import android.annotation.SuppressLint
 import android.view.MotionEvent
