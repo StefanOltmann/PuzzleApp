@@ -24,8 +24,12 @@ class PuzzleActivity : AppCompatActivity() {
         findViewById(R.id.puzzle_piece_layer)
     }
 
-    private val imageView: ImageView by lazy {
-        findViewById(R.id.puzzle_background_image_view)
+    private val puzzleImageView: ImageView by lazy {
+        findViewById(R.id.puzzle_image_view)
+    }
+
+    private val puzzlePieceOutlinesImageView : ImageView by lazy {
+        findViewById(R.id.puzzle_piece_outlines_image_view)
     }
 
     private val isGameOver: Boolean
@@ -49,41 +53,92 @@ class PuzzleActivity : AppCompatActivity() {
 
         // run image related code after the view was laid out
         // to have all dimensions calculated
-        imageView.post {
+        puzzleImageView.post {
 
             if (assetName != null) {
 
-                setPicFromAsset(assetName, imageView)
+                setPicFromAsset(assetName, puzzleImageView)
 
             } else if (currentPhotoUri != null) {
 
-                imageView.setImageURI(Uri.parse(currentPhotoUri))
+                puzzleImageView.setImageURI(Uri.parse(currentPhotoUri))
             }
 
-            puzzlePieceViews = createShuffledPuzzlePieceViews()
+            val cols = 4
+            val rows = 3
+
+            puzzlePieceViews = createShuffledPuzzlePieceViews(cols, rows)
 
             val touchListener = TouchListener(this@PuzzleActivity)
 
-            for ((index, puzzlePiece) in puzzlePieceViews.withIndex()) {
+            setTouchListenerToPuzzlePieceViews(touchListener)
 
-                puzzlePiece.setOnTouchListener(touchListener)
+            addPuzzlePieceViewsToPuzzlePieceLayer()
 
-                puzzlePieceLayer.addView(puzzlePiece)
-
-                // randomize position at the sides, half and half
-
-                val layoutParams = puzzlePiece.layoutParams as RelativeLayout.LayoutParams
-
-                if (index % 2 == 0)
-                    layoutParams.leftMargin = 0
-                else
-                    layoutParams.leftMargin = puzzlePieceLayer.width - puzzlePiece.pieceWidth
-
-                layoutParams.topMargin = (0 until puzzlePieceLayer.height - puzzlePiece.pieceHeight).random()
-
-                puzzlePiece.layoutParams = layoutParams
-            }
+            drawPuzzlePieceOutlines(cols, rows)
         }
+    }
+
+    private fun setTouchListenerToPuzzlePieceViews(touchListener: TouchListener) {
+
+        for (puzzlePieceView in puzzlePieceViews)
+            puzzlePieceView.setOnTouchListener(touchListener)
+    }
+
+    private fun addPuzzlePieceViewsToPuzzlePieceLayer() {
+
+        for ((index, puzzlePieceView) in puzzlePieceViews.withIndex()) {
+
+            puzzlePieceLayer.addView(puzzlePieceView)
+
+            // randomize position at the sides, half and half
+
+            val layoutParams = puzzlePieceView.layoutParams as RelativeLayout.LayoutParams
+
+            if (index % 2 == 0)
+                layoutParams.leftMargin = 0
+            else
+                layoutParams.leftMargin = puzzlePieceLayer.width - puzzlePieceView.pieceWidth
+
+            layoutParams.topMargin = (0 until puzzlePieceLayer.height - puzzlePieceView.pieceHeight).random()
+
+            puzzlePieceView.layoutParams = layoutParams
+        }
+    }
+
+    private fun drawPuzzlePieceOutlines(cols: Int, rows: Int) {
+
+        val outlinesBitmap = Bitmap.createBitmap(
+                puzzleImageView.width,
+                puzzleImageView.height,
+                Bitmap.Config.ARGB_8888)
+
+        val canvas = Canvas(outlinesBitmap)
+
+        for (puzzlePieceView in puzzlePieceViews) {
+
+            // FIXME Code here is redundant and needs to be cleaned up
+
+            val pieceWidth = puzzleImageView.width / cols
+            val pieceHeight = puzzleImageView.height / rows
+
+            val offsetX = if (puzzlePieceView.col > 0) pieceWidth / 3 else 0
+            val offsetY = if (puzzlePieceView.row > 0) pieceHeight / 3 else 0
+
+            val dx = (puzzlePieceView.col * pieceWidth - offsetX).toFloat()
+            val dy = (puzzlePieceView.row * pieceHeight - offsetY).toFloat()
+
+            canvas.translate(dx, dy)
+
+            paint.color = Color.GRAY
+            paint.strokeWidth = 4f
+
+            canvas.drawPath(puzzlePieceView.path!!, paint)
+
+            canvas.translate(-dx, -dy)
+        }
+
+        puzzlePieceOutlinesImageView.setImageBitmap(outlinesBitmap)
     }
 
     private fun setPicFromAsset(assetName: String, imageView: ImageView) {
@@ -125,15 +180,14 @@ class PuzzleActivity : AppCompatActivity() {
         }
     }
 
-    private fun createShuffledPuzzlePieceViews(
-            rows: Int = 3, cols: Int = 4): List<PuzzlePieceView> {
+    private fun createShuffledPuzzlePieceViews(cols: Int, rows: Int): List<PuzzlePieceView> {
 
         val puzzlePieceViews = mutableListOf<PuzzlePieceView>()
 
         // Get the scaled bitmap of the source image
-        val drawable = imageView.drawable as BitmapDrawable
+        val drawable = puzzleImageView.drawable as BitmapDrawable
         val bitmap = drawable.bitmap
-        val dimensions = calcBitmapPositionInsideImageView(imageView)
+        val dimensions = calcBitmapPositionInsideImageView(puzzleImageView)
 
         val scaledBitmapLeft = dimensions[0]
         val scaledBitmapTop = dimensions[1]
@@ -221,10 +275,14 @@ class PuzzleActivity : AppCompatActivity() {
 
                 // create a view with the final bitmap
                 val puzzlePieceView = PuzzlePieceView(applicationContext)
-                puzzlePieceView.posX = posX - offsetX + imageView.left
-                puzzlePieceView.posY = posY - offsetY + imageView.top
-                puzzlePieceView.pieceWidth = puzzlePieceWidth + offsetX
-                puzzlePieceView.pieceHeight = puzzlePieceHeight + offsetY
+
+                puzzlePieceView.row = row
+                puzzlePieceView.col = col
+                puzzlePieceView.path = path
+                puzzlePieceView.posX = posX - offsetX + puzzleImageView.left
+                puzzlePieceView.posY = posY - offsetY + puzzleImageView.top
+                puzzlePieceView.pieceWidth = puzzlePieceBitmapWidth
+                puzzlePieceView.pieceHeight = puzzlePieceBitmapHeight
                 puzzlePieceView.setImageBitmap(finalPuzzlePieceBitmap)
 
                 // add the piece to the list
@@ -402,7 +460,8 @@ class PuzzleActivity : AppCompatActivity() {
         if (isGameOver) {
 
             // Make the image fully visible and remove the puzzle pieces
-            imageView.alpha = 1.0f
+            puzzleImageView.alpha = 1.0f
+            puzzlePieceOutlinesImageView.alpha = 0.0f
             puzzlePieceLayer.removeAllViews()
 
             Thread {
