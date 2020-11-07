@@ -3,7 +3,7 @@ package de.stefan_oltmann.puzzleapp
 import android.content.Context
 import androidx.appcompat.widget.AppCompatImageView
 
-class PuzzlePiece(context: Context) : AppCompatImageView(context) {
+class PuzzlePieceView(context: Context) : AppCompatImageView(context) {
 
     var posX = 0
     var posY = 0

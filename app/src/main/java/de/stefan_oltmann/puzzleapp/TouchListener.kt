@@ -23,7 +23,7 @@ class TouchListener(private val activity: PuzzleActivity) : OnTouchListener {
         val tolerance = sqrt(view.width.toDouble().pow(2.0)
                 + view.height.toDouble().pow(2.0)) / 10
 
-        val puzzlePiece = view as PuzzlePiece
+        val puzzlePiece = view as PuzzlePieceView
 
         if (!puzzlePiece.canMove)
             return true

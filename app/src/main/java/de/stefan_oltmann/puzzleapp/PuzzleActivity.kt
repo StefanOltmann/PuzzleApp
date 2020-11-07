@@ -15,7 +15,7 @@ import kotlin.math.roundToInt
 
 class PuzzleActivity : AppCompatActivity() {
 
-    private lateinit var puzzlePieces: List<PuzzlePiece>
+    private lateinit var puzzlePieceViews: List<PuzzlePieceView>
 
     private val puzzlePieceLayer: RelativeLayout by lazy {
         findViewById(R.id.puzzle_piece_layer)
@@ -28,7 +28,7 @@ class PuzzleActivity : AppCompatActivity() {
     private val isGameOver: Boolean
         get() {
 
-            for (piece in puzzlePieces)
+            for (piece in puzzlePieceViews)
                 if (piece.canMove)
                     return false
 
@@ -57,11 +57,11 @@ class PuzzleActivity : AppCompatActivity() {
                 imageView.setImageURI(Uri.parse(currentPhotoUri))
             }
 
-            puzzlePieces = createShuffledPuzzlePieces()
+            puzzlePieceViews = createShuffledPuzzlePieces()
 
             val touchListener = TouchListener(this@PuzzleActivity)
 
-            for ((index, puzzlePiece) in puzzlePieces.withIndex()) {
+            for ((index, puzzlePiece) in puzzlePieceViews.withIndex()) {
 
                 puzzlePiece.setOnTouchListener(touchListener)
 
@@ -123,9 +123,9 @@ class PuzzleActivity : AppCompatActivity() {
     }
 
     private fun createShuffledPuzzlePieces(
-            rows: Int = 3, cols: Int = 4): List<PuzzlePiece> {
+            rows: Int = 3, cols: Int = 4): List<PuzzlePieceView> {
 
-        val pieces = mutableListOf<PuzzlePiece>()
+        val pieces = mutableListOf<PuzzlePieceView>()
 
         val imageView = findViewById<ImageView>(R.id.puzzle_background_image_view)
 
@@ -154,8 +154,8 @@ class PuzzleActivity : AppCompatActivity() {
                 croppedImageWidth, croppedImageHeight)
 
         // Calculate the with and height of the pieces
-        val pieceWidth = croppedImageWidth / cols
-        val pieceHeight = croppedImageHeight / rows
+        val puzzlePieceWidth = croppedImageWidth / cols
+        val puzzlePieceHeight = croppedImageHeight / rows
 
         // Create each bitmap piece and add it to the resulting array
         var posY = 0
@@ -167,139 +167,29 @@ class PuzzleActivity : AppCompatActivity() {
             for (col in 0 until cols) {
 
                 // calculate offset for each piece
-                val offsetX = if (col > 0) pieceWidth / 3 else 0
-                val offsetY = if (row > 0) pieceHeight / 3 else 0
+                val offsetX = if (col > 0) puzzlePieceWidth / 3 else 0
+                val offsetY = if (row > 0) puzzlePieceHeight / 3 else 0
 
                 // apply the offset to each piece
-                val pieceBitmap = Bitmap.createBitmap(
-                        croppedBitmap,
-                        posX - offsetX,
-                        posY - offsetY,
-                        pieceWidth + offsetX,
-                        pieceHeight + offsetY)
+                val puzzlePieceBitmapWidth = puzzlePieceWidth + offsetX
+                val puzzlePieceBitmapHeight = puzzlePieceHeight + offsetY
 
-                val piece = PuzzlePiece(applicationContext)
+                val bumpSize = puzzlePieceHeight / 2.3f
 
-                piece.setImageBitmap(pieceBitmap)
-                piece.posX = posX - offsetX + imageView.left
-                piece.posY = posY - offsetY + imageView.top
-                piece.pieceWidth = pieceWidth + offsetX
-                piece.pieceHeight = pieceHeight + offsetY
+                val path = createPath(
+                        bumpSize,
+                        offsetX, offsetY,
+                        row, col, cols, rows,
+                        puzzlePieceBitmapWidth,
+                        puzzlePieceBitmapHeight)
 
-                // this bitmap will hold our final puzzle piece image
-                val puzzlePiece = Bitmap.createBitmap(
-                        pieceWidth + offsetX,
-                        pieceHeight + offsetY,
+                val finalPuzzlePieceBitmap = Bitmap.createBitmap(
+                        puzzlePieceWidth + offsetX,
+                        puzzlePieceHeight + offsetY,
                         Bitmap.Config.ARGB_8888)
 
-                // draw path
-                val bumpSize = pieceHeight / 2.3
+                val canvas = Canvas(finalPuzzlePieceBitmap)
 
-                val path = Path()
-
-                path.moveTo(offsetX.toFloat(), offsetY.toFloat())
-
-                val topSidePiece = row == 0
-                val rightSidePiece = col == cols - 1
-                val bottomSidePiece = row == rows - 1
-                val leftSidePiece = col == 0
-
-                if (topSidePiece) {
-
-                    path.lineTo(pieceBitmap.width.toFloat(), offsetY.toFloat())
-
-                } else {
-
-                    // top bump
-                    path.lineTo(
-                            offsetX + (pieceBitmap.width - offsetX) / 3f,
-                            offsetY.toFloat())
-
-                    path.cubicTo(
-                            offsetX + (pieceBitmap.width - offsetX) / 6f,
-                            offsetY - bumpSize.toFloat(),
-                            offsetX + (pieceBitmap.width - offsetX) / 6f * 5f,
-                            offsetY - bumpSize.toFloat(),
-                            offsetX + (pieceBitmap.width - offsetX) / 3f * 2f,
-                            offsetY.toFloat())
-
-                    path.lineTo(pieceBitmap.width.toFloat(), offsetY.toFloat())
-                }
-
-                if (rightSidePiece) {
-
-                    // right side piece
-                    path.lineTo(
-                            pieceBitmap.width.toFloat(),
-                            pieceBitmap.height.toFloat())
-
-                } else {
-
-                    // right bump
-                    path.lineTo(
-                            pieceBitmap.width.toFloat(),
-                            offsetY + (pieceBitmap.height - offsetY) / 3f)
-
-                    path.cubicTo(
-                            pieceBitmap.width - bumpSize.toFloat(),
-                            offsetY + (pieceBitmap.height - offsetY) / 6f,
-                            pieceBitmap.width - bumpSize.toFloat(),
-                            offsetY + (pieceBitmap.height - offsetY) / 6f * 5f,
-                            pieceBitmap.width.toFloat(),
-                            offsetY + (pieceBitmap.height - offsetY) / 3f * 2f)
-
-                    path.lineTo(
-                            pieceBitmap.width.toFloat(),
-                            pieceBitmap.height.toFloat())
-                }
-
-                if (bottomSidePiece) {
-
-                    path.lineTo(
-                            offsetX.toFloat(),
-                            pieceBitmap.height.toFloat())
-
-                } else {
-
-                    // bottom bump
-                    path.lineTo(
-                            offsetX + (pieceBitmap.width - offsetX) / 3f * 2f,
-                            pieceBitmap.height.toFloat())
-
-                    path.cubicTo(
-                            offsetX + (pieceBitmap.width - offsetX) / 6f * 5f,
-                            pieceBitmap.height - bumpSize.toFloat(),
-                            offsetX + (pieceBitmap.width - offsetX) / 6f,
-                            pieceBitmap.height - bumpSize.toFloat(),
-                            offsetX + (pieceBitmap.width - offsetX) / 3f,
-                            pieceBitmap.height.toFloat())
-
-                    path.lineTo(offsetX.toFloat(), pieceBitmap.height.toFloat())
-                }
-
-                if (leftSidePiece) {
-
-                    path.close()
-
-                } else {
-
-                    // left bump
-                    path.lineTo(
-                            offsetX.toFloat(),
-                            offsetY + (pieceBitmap.height - offsetY) / 3f * 2f)
-
-                    path.cubicTo(
-                            offsetX - bumpSize.toFloat(),
-                            offsetY + (pieceBitmap.height - offsetY) / 6f * 5f,
-                            offsetX - bumpSize.toFloat(),
-                            offsetY + (pieceBitmap.height - offsetY) / 6f,
-                            offsetX.toFloat(),
-                            offsetY + (pieceBitmap.height - offsetY) / 3f)
-
-                    path.close()
-                }
-
-                val canvas = Canvas(puzzlePiece)
                 val paint = Paint()
 
                 // mask the piece
@@ -307,8 +197,16 @@ class PuzzleActivity : AppCompatActivity() {
                 paint.style = Paint.Style.FILL
                 canvas.drawPath(path, paint)
 
+                val puzzlePieceBitmap = Bitmap.createBitmap(
+                        croppedBitmap,
+                        posX - offsetX,
+                        posY - offsetY,
+                        puzzlePieceBitmapWidth,
+                        puzzlePieceBitmapHeight)
+
                 paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
-                canvas.drawBitmap(pieceBitmap, 0f, 0f, paint)
+
+                canvas.drawBitmap(puzzlePieceBitmap, 0f, 0f, paint)
 
                 // draw a white border
                 paint.color = Color.WHITE
@@ -322,21 +220,135 @@ class PuzzleActivity : AppCompatActivity() {
                 paint.strokeWidth = 6f
                 canvas.drawPath(path, paint)
 
-                // set the resulting bitmap to the piece
-                piece.setImageBitmap(puzzlePiece)
+                // create a view with the final bitmap
+                val puzzlePieceView = PuzzlePieceView(applicationContext)
+                puzzlePieceView.posX = posX - offsetX + imageView.left
+                puzzlePieceView.posY = posY - offsetY + imageView.top
+                puzzlePieceView.pieceWidth = puzzlePieceWidth + offsetX
+                puzzlePieceView.pieceHeight = puzzlePieceHeight + offsetY
+                puzzlePieceView.setImageBitmap(finalPuzzlePieceBitmap)
 
                 // add the piece to the list
-                pieces.add(piece)
+                pieces.add(puzzlePieceView)
 
-                posX += pieceWidth
+                posX += puzzlePieceWidth
             }
 
-            posY += pieceHeight
+            posY += puzzlePieceHeight
         }
 
         pieces.shuffle()
 
         return pieces.toList()
+    }
+
+    private fun createPath(bumpSize: Float, offsetX: Int, offsetY: Int, row: Int, col: Int, cols: Int, rows: Int, puzzlePieceBitmapWidth: Int, puzzlePieceBitmapHeight: Int): Path {
+
+        val path = Path()
+
+        path.moveTo(offsetX.toFloat(), offsetY.toFloat())
+
+        val topSidePiece = row == 0
+        val rightSidePiece = col == cols - 1
+        val bottomSidePiece = row == rows - 1
+        val leftSidePiece = col == 0
+
+        if (topSidePiece) {
+
+            path.lineTo(puzzlePieceBitmapWidth.toFloat(), offsetY.toFloat())
+
+        } else {
+
+            // top bump
+            path.lineTo(
+                    offsetX + (puzzlePieceBitmapWidth - offsetX) / 3f,
+                    offsetY.toFloat())
+
+            path.cubicTo(
+                    offsetX + (puzzlePieceBitmapWidth - offsetX) / 6f,
+                    offsetY - bumpSize,
+                    offsetX + (puzzlePieceBitmapWidth - offsetX) / 6f * 5f,
+                    offsetY - bumpSize,
+                    offsetX + (puzzlePieceBitmapWidth - offsetX) / 3f * 2f,
+                    offsetY.toFloat())
+
+            path.lineTo(puzzlePieceBitmapWidth.toFloat(), offsetY.toFloat())
+        }
+
+        if (rightSidePiece) {
+
+            // right side piece
+            path.lineTo(
+                    puzzlePieceBitmapWidth.toFloat(),
+                    puzzlePieceBitmapHeight.toFloat())
+
+        } else {
+
+            // right bump
+            path.lineTo(
+                    puzzlePieceBitmapWidth.toFloat(),
+                    offsetY + (puzzlePieceBitmapHeight - offsetY) / 3f)
+
+            path.cubicTo(
+                    puzzlePieceBitmapWidth - bumpSize,
+                    offsetY + (puzzlePieceBitmapHeight - offsetY) / 6f,
+                    puzzlePieceBitmapWidth - bumpSize,
+                    offsetY + (puzzlePieceBitmapHeight - offsetY) / 6f * 5f,
+                    puzzlePieceBitmapWidth.toFloat(),
+                    offsetY + (puzzlePieceBitmapHeight - offsetY) / 3f * 2f)
+
+            path.lineTo(
+                    puzzlePieceBitmapWidth.toFloat(),
+                    puzzlePieceBitmapHeight.toFloat())
+        }
+
+        if (bottomSidePiece) {
+
+            path.lineTo(
+                    offsetX.toFloat(),
+                    puzzlePieceBitmapHeight.toFloat())
+
+        } else {
+
+            // bottom bump
+            path.lineTo(
+                    offsetX + (puzzlePieceBitmapWidth - offsetX) / 3f * 2f,
+                    puzzlePieceBitmapHeight.toFloat())
+
+            path.cubicTo(
+                    offsetX + (puzzlePieceBitmapWidth - offsetX) / 6f * 5f,
+                    puzzlePieceBitmapHeight - bumpSize,
+                    offsetX + (puzzlePieceBitmapWidth - offsetX) / 6f,
+                    puzzlePieceBitmapHeight - bumpSize,
+                    offsetX + (puzzlePieceBitmapWidth - offsetX) / 3f,
+                    puzzlePieceBitmapHeight.toFloat())
+
+            path.lineTo(offsetX.toFloat(), puzzlePieceBitmapHeight.toFloat())
+        }
+
+        if (leftSidePiece) {
+
+            path.close()
+
+        } else {
+
+            // left bump
+            path.lineTo(
+                    offsetX.toFloat(),
+                    offsetY + (puzzlePieceBitmapHeight - offsetY) / 3f * 2f)
+
+            path.cubicTo(
+                    offsetX - bumpSize,
+                    offsetY + (puzzlePieceBitmapHeight - offsetY) / 6f * 5f,
+                    offsetX - bumpSize,
+                    offsetY + (puzzlePieceBitmapHeight - offsetY) / 6f,
+                    offsetX.toFloat(),
+                    offsetY + (puzzlePieceBitmapHeight - offsetY) / 3f)
+
+            path.close()
+        }
+
+        return path
     }
 
     private fun calcBitmapPositionInsideImageView(imageView: ImageView): IntArray {
@@ -384,7 +396,7 @@ class PuzzleActivity : AppCompatActivity() {
 
                 // Let the user see the finished puzzle for
                 // some seconds before going back.
-                Thread.sleep(3000)
+                Thread.sleep(2000)
 
                 finish()
 
