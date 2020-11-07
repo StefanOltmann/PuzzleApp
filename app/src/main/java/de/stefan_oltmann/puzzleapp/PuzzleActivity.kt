@@ -17,6 +17,9 @@ class PuzzleActivity : AppCompatActivity() {
 
     private lateinit var puzzlePieceViews: List<PuzzlePieceView>
 
+    // Reusable Paint
+    private val paint = Paint()
+
     private val puzzlePieceLayer: RelativeLayout by lazy {
         findViewById(R.id.puzzle_piece_layer)
     }
@@ -190,12 +193,12 @@ class PuzzleActivity : AppCompatActivity() {
 
                 val canvas = Canvas(finalPuzzlePieceBitmap)
 
-                val paint = Paint()
-
-                // mask the piece
+                // draw the mask on the piece
                 paint.color = Color.BLACK
                 paint.style = Paint.Style.FILL
                 canvas.drawPath(path, paint)
+
+                // draw the bitmap on the piece
 
                 val puzzlePieceBitmap = Bitmap.createBitmap(
                         croppedBitmap,
@@ -204,20 +207,18 @@ class PuzzleActivity : AppCompatActivity() {
                         puzzlePieceBitmapWidth,
                         puzzlePieceBitmapHeight)
 
+                // this lets it only draw where the black mask is
                 paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
 
                 canvas.drawBitmap(puzzlePieceBitmap, 0f, 0f, paint)
 
-                // draw a white border
-                paint.color = Color.WHITE
-                paint.style = Paint.Style.STROKE
-                paint.strokeWidth = 12f
-                canvas.drawPath(path, paint)
+                // Reset the mode, so that we can reuse the Paint instance
+                paint.xfermode = null
 
-                // draw a black border
+                // draw the border
                 paint.color = Color.BLACK
                 paint.style = Paint.Style.STROKE
-                paint.strokeWidth = 6f
+                paint.strokeWidth = 4f
                 canvas.drawPath(path, paint)
 
                 // create a view with the final bitmap
