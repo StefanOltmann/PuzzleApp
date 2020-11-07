@@ -1,9 +1,3 @@
 <resources>
     <string name="app_name">Puzzle</string>
-
-    <!-- Camera permission request -->
-    <string name="dialog_camera_title">Camera permission</string>
-    <string name="dialog_camera_explanation">You should provide access to the camera in order to generate a puzzle from the taken picture.</string>
-    <string name="dialog_write_external_storage_title">External storage permission</string>
-    <string name="dialog_write_external_storage_explanation">You should provide access to your storage in order to handle the images taken by camera.</string>
 </resources>

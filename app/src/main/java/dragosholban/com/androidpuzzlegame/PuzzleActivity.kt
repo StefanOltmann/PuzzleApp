@@ -19,7 +19,6 @@ class PuzzleActivity : AppCompatActivity() {
 
     private lateinit var puzzlePieces: List<PuzzlePiece>
 
-    private var currentPhotoPath: String? = null
     private var currentPhotoUri: String? = null
 
     private val isGameOver : Boolean
@@ -42,7 +41,6 @@ class PuzzleActivity : AppCompatActivity() {
 
         val assetName = intent.getStringExtra("assetName")
 
-        currentPhotoPath = intent.getStringExtra("currentPhotoPath")
         currentPhotoUri = intent.getStringExtra("currentPhotoUri")
 
         // run image related code after the view was laid out
@@ -52,10 +50,6 @@ class PuzzleActivity : AppCompatActivity() {
             if (assetName != null) {
 
                 setPicFromAsset(assetName, imageView)
-
-            } else if (currentPhotoPath != null) {
-
-                setPicFromPath(currentPhotoPath!!, imageView)
 
             } else if (currentPhotoUri != null) {
 
@@ -339,66 +333,6 @@ class PuzzleActivity : AppCompatActivity() {
                 finish()
 
             }.start()
-        }
-    }
-
-    private fun setPicFromPath(currentPhotoPath: String, imageView: ImageView) {
-
-        // Get the dimensions of the View
-        val targetWidth = imageView.width
-        val targetHeight = imageView.height
-
-        // Get the dimensions of the bitmap
-        val bitmapOptions = BitmapFactory.Options()
-        bitmapOptions.inJustDecodeBounds = true
-
-        BitmapFactory.decodeFile(currentPhotoPath, bitmapOptions)
-
-        val photoWidth = bitmapOptions.outWidth
-        val photoHeight = bitmapOptions.outHeight
-
-        // Determine how much to scale down the image
-        val scaleFactor = min(photoWidth / targetWidth, photoHeight / targetHeight)
-
-        // Decode the image file into a Bitmap sized to fill the View
-        bitmapOptions.inJustDecodeBounds = false
-        bitmapOptions.inSampleSize = scaleFactor
-        //bitmapOptions.inPurgeable = true
-
-        val bitmap = BitmapFactory.decodeFile(currentPhotoPath, bitmapOptions)
-
-        var rotatedBitmap = bitmap
-
-        // rotate bitmap if needed
-        try {
-
-            val exifInterface = ExifInterface(currentPhotoPath)
-
-            val orientation = exifInterface.getAttributeInt(
-                    ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
-
-            when (orientation) {
-                ExifInterface.ORIENTATION_ROTATE_90 -> rotatedBitmap = rotateImage(bitmap, 90f)
-                ExifInterface.ORIENTATION_ROTATE_180 -> rotatedBitmap = rotateImage(bitmap, 180f)
-                ExifInterface.ORIENTATION_ROTATE_270 -> rotatedBitmap = rotateImage(bitmap, 270f)
-            }
-
-        } catch (e: IOException) {
-            toast(e.localizedMessage ?: "")
-        }
-
-        imageView.setImageBitmap(rotatedBitmap)
-    }
-
-    companion object {
-
-        fun rotateImage(source: Bitmap, angle: Float): Bitmap {
-
-            val matrix = Matrix()
-
-            matrix.postRotate(angle)
-
-            return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
         }
     }
 }
