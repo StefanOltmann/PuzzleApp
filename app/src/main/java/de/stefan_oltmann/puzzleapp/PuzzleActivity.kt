@@ -18,8 +18,6 @@ class PuzzleActivity : AppCompatActivity() {
 
     private lateinit var puzzlePieces: List<PuzzlePiece>
 
-    private var currentPhotoUri: String? = null
-
     private val isGameOver : Boolean
         get() {
 
@@ -40,7 +38,7 @@ class PuzzleActivity : AppCompatActivity() {
 
         val assetName = intent.getStringExtra("assetName")
 
-        currentPhotoUri = intent.getStringExtra("currentPhotoUri")
+        val currentPhotoUri = intent.getStringExtra("currentPhotoUri")
 
         // run image related code after the view was laid out
         // to have all dimensions calculated
