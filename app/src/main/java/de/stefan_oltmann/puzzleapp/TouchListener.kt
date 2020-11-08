@@ -25,6 +25,8 @@ class TouchListener(private val activity: PuzzleActivity) : OnTouchListener {
         if (!puzzlePieceView.canMove)
             return true
 
+        val parentView = view.parent as ViewGroup
+
         val layoutParams = view.getLayoutParams() as RelativeLayout.LayoutParams
 
         when (motionEvent.action and MotionEvent.ACTION_MASK) {
@@ -39,8 +41,16 @@ class TouchListener(private val activity: PuzzleActivity) : OnTouchListener {
 
             MotionEvent.ACTION_MOVE -> {
 
-                layoutParams.leftMargin = (x - deltaX).toInt()
-                layoutParams.topMargin = (y - deltaY).toInt()
+                // Determine maximal values
+                val maxLeft = parentView.width - view.width
+                val maxTop = parentView.height - view.height
+
+                // Prevent moving it off-screen
+                val newLeft = (x - deltaX).toInt().coerceIn(0, maxLeft)
+                val newTop = (y - deltaY).toInt().coerceIn(0, maxTop)
+
+                layoutParams.leftMargin = newLeft
+                layoutParams.topMargin = newTop
 
                 view.setLayoutParams(layoutParams)
             }
