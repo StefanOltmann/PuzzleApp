@@ -1,4 +1,20 @@
-# AndroidPuzzleGame
+# PuzzleApp
+
+## Download
+
+[<img src="https://github.com/StefanOltmann/PuzzleApp/blob/master/docs/playstore_badge.png"
+      alt="Get it on Google Play"
+      height="80">](https://play.google.com/store/apps/details?id=de.stefan_oltmann.puzzleapp)
+
+## Screenshots
+
+<img src="https://github.com/StefanOltmann/PuzzleApp/blob/master/docs/screenshot_1.png" height="300">
+
+<img src="https://github.com/StefanOltmann/PuzzleApp/blob/master/docs/screenshot_2.png" height="300">
+
+<img src="https://github.com/StefanOltmann/PuzzleApp/blob/master/docs/screenshot_3.png" height="300">
+
+## Origin
 
 This is a fork of a Jigsaw Puzzle Android Game sample made by [Dragos Holban](https://dragosholban.com/).
 
