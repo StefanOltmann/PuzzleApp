@@ -1,5 +1,7 @@
 # PuzzleApp
 
+[![CodeFactor](https://www.codefactor.io/repository/github/stefanoltmann/puzzleapp/badge)](https://www.codefactor.io/repository/github/stefanoltmann/puzzleapp)
+
 ## Download
 
 [<img src="https://github.com/StefanOltmann/PuzzleApp/blob/master/docs/playstore_badge.png"
