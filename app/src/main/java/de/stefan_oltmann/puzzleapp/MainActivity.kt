@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.AdapterView.OnItemClickListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -16,13 +15,8 @@ import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
 
-    companion object {
-
-        private const val REQUEST_PERMISSION_READ_EXTERNAL_STORAGE = 1
-        private const val REQUEST_IMAGE_GALLERY = 2
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
@@ -46,6 +40,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == REQUEST_IMAGE_GALLERY && resultCode == Activity.RESULT_OK) {
@@ -58,13 +53,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun onImageFromGalleryClick(view: View?) {
+    fun onImageFromGalleryClick() {
 
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
+        val permissionCheckResult = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+
+        if (permissionCheckResult != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(
                 this,
@@ -78,5 +71,10 @@ class MainActivity : AppCompatActivity() {
             photoPickerIntent.type = "image/*"
             startActivityForResult(photoPickerIntent, REQUEST_IMAGE_GALLERY)
         }
+    }
+
+    companion object {
+        private const val REQUEST_PERMISSION_READ_EXTERNAL_STORAGE = 1
+        private const val REQUEST_IMAGE_GALLERY = 2
     }
 }

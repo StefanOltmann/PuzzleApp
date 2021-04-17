@@ -115,6 +115,7 @@ class PuzzleActivity : AppCompatActivity() {
         }
     }
 
+    @Suppress("SameParameterValue")
     private fun drawPuzzlePieceOutlines(cols: Int, rows: Int) {
 
         val outlinesBitmap = Bitmap.createBitmap(
@@ -190,6 +191,7 @@ class PuzzleActivity : AppCompatActivity() {
         }
     }
 
+    @Suppress("SameParameterValue")
     private fun createShuffledPuzzlePieceViews(cols: Int, rows: Int): List<PuzzlePieceView> {
 
         val puzzlePieceViews = mutableListOf<PuzzlePieceView>()
@@ -216,8 +218,10 @@ class PuzzleActivity : AppCompatActivity() {
 
         val croppedBitmap = Bitmap.createBitmap(
             scaledBitmap,
-            abs(scaledBitmapLeft), abs(scaledBitmapTop),
-            croppedImageWidth, croppedImageHeight
+            abs(scaledBitmapLeft),
+            abs(scaledBitmapTop),
+            croppedImageWidth,
+            croppedImageHeight
         )
 
         // Calculate the with and height of the pieces
@@ -316,10 +320,14 @@ class PuzzleActivity : AppCompatActivity() {
 
     private fun createPuzzlePiecePath(
         bumpSize: Float,
-        offsetX: Int, offsetY: Int,
-        row: Int, col: Int,
-        cols: Int, rows: Int,
-        puzzlePieceWidth: Int, puzzlePieceHeight: Int
+        offsetX: Int,
+        offsetY: Int,
+        row: Int,
+        col: Int,
+        cols: Int,
+        rows: Int,
+        puzzlePieceWidth: Int,
+        puzzlePieceHeight: Int
     ): Path {
 
         val puzzlePieceBitmapWidth = puzzlePieceWidth + offsetX
