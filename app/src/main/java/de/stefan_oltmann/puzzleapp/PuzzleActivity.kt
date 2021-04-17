@@ -1,6 +1,15 @@
 package de.stefan_oltmann.puzzleapp
 
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Matrix
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
+import android.graphics.Rect
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -28,7 +37,7 @@ class PuzzleActivity : AppCompatActivity() {
         findViewById(R.id.puzzle_image_view)
     }
 
-    private val puzzlePieceOutlinesImageView : ImageView by lazy {
+    private val puzzlePieceOutlinesImageView: ImageView by lazy {
         findViewById(R.id.puzzle_piece_outlines_image_view)
     }
 
@@ -109,9 +118,10 @@ class PuzzleActivity : AppCompatActivity() {
     private fun drawPuzzlePieceOutlines(cols: Int, rows: Int) {
 
         val outlinesBitmap = Bitmap.createBitmap(
-                puzzleImageView.width,
-                puzzleImageView.height,
-                Bitmap.Config.ARGB_8888)
+            puzzleImageView.width,
+            puzzleImageView.height,
+            Bitmap.Config.ARGB_8888
+        )
 
         val canvas = Canvas(outlinesBitmap)
 
@@ -198,15 +208,17 @@ class PuzzleActivity : AppCompatActivity() {
         val croppedImageHeight = scaledBitmapHeight - 2 * abs(scaledBitmapTop)
 
         val scaledBitmap = Bitmap.createScaledBitmap(
-                bitmap,
-                scaledBitmapWidth,
-                scaledBitmapHeight,
-                true)
+            bitmap,
+            scaledBitmapWidth,
+            scaledBitmapHeight,
+            true
+        )
 
         val croppedBitmap = Bitmap.createBitmap(
-                scaledBitmap,
-                abs(scaledBitmapLeft), abs(scaledBitmapTop),
-                croppedImageWidth, croppedImageHeight)
+            scaledBitmap,
+            abs(scaledBitmapLeft), abs(scaledBitmapTop),
+            croppedImageWidth, croppedImageHeight
+        )
 
         // Calculate the with and height of the pieces
         val puzzlePieceWidth = croppedImageWidth / cols
@@ -232,16 +244,18 @@ class PuzzleActivity : AppCompatActivity() {
                 val bumpSize = puzzlePieceHeight / 2.3f
 
                 val path = createPuzzlePiecePath(
-                        bumpSize,
-                        offsetX, offsetY,
-                        row, col, cols, rows,
-                        puzzlePieceWidth,
-                        puzzlePieceHeight)
+                    bumpSize,
+                    offsetX, offsetY,
+                    row, col, cols, rows,
+                    puzzlePieceWidth,
+                    puzzlePieceHeight
+                )
 
                 val finalPuzzlePieceBitmap = Bitmap.createBitmap(
-                        puzzlePieceBitmapWidth,
-                        puzzlePieceBitmapHeight,
-                        Bitmap.Config.ARGB_8888)
+                    puzzlePieceBitmapWidth,
+                    puzzlePieceBitmapHeight,
+                    Bitmap.Config.ARGB_8888
+                )
 
                 val canvas = Canvas(finalPuzzlePieceBitmap)
 
@@ -253,11 +267,12 @@ class PuzzleActivity : AppCompatActivity() {
                 // draw the bitmap on the piece
 
                 val puzzlePieceBitmap = Bitmap.createBitmap(
-                        croppedBitmap,
-                        posX - offsetX,
-                        posY - offsetY,
-                        puzzlePieceBitmapWidth,
-                        puzzlePieceBitmapHeight)
+                    croppedBitmap,
+                    posX - offsetX,
+                    posY - offsetY,
+                    puzzlePieceBitmapWidth,
+                    puzzlePieceBitmapHeight
+                )
 
                 // this lets it only draw where the black mask is
                 paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
@@ -300,11 +315,12 @@ class PuzzleActivity : AppCompatActivity() {
     }
 
     private fun createPuzzlePiecePath(
-            bumpSize: Float,
-            offsetX: Int, offsetY: Int,
-            row: Int, col: Int,
-            cols: Int, rows: Int,
-            puzzlePieceWidth: Int, puzzlePieceHeight: Int): Path {
+        bumpSize: Float,
+        offsetX: Int, offsetY: Int,
+        row: Int, col: Int,
+        cols: Int, rows: Int,
+        puzzlePieceWidth: Int, puzzlePieceHeight: Int
+    ): Path {
 
         val puzzlePieceBitmapWidth = puzzlePieceWidth + offsetX
         val puzzlePieceBitmapHeight = puzzlePieceHeight + offsetY
@@ -321,80 +337,92 @@ class PuzzleActivity : AppCompatActivity() {
         if (topSidePiece) {
 
             path.lineTo(
-                    puzzlePieceBitmapWidth.toFloat(),
-                    offsetY.toFloat())
+                puzzlePieceBitmapWidth.toFloat(),
+                offsetY.toFloat()
+            )
 
         } else {
 
             // top bump
             path.lineTo(
-                    offsetX + puzzlePieceWidth / 3f,
-                    offsetY.toFloat())
+                offsetX + puzzlePieceWidth / 3f,
+                offsetY.toFloat()
+            )
 
             path.cubicTo(
-                    offsetX + puzzlePieceWidth / 6f,
-                    offsetY - bumpSize,
-                    offsetX + puzzlePieceWidth / 6f * 5f,
-                    offsetY - bumpSize,
-                    offsetX + puzzlePieceWidth / 3f * 2f,
-                    offsetY.toFloat())
+                offsetX + puzzlePieceWidth / 6f,
+                offsetY - bumpSize,
+                offsetX + puzzlePieceWidth / 6f * 5f,
+                offsetY - bumpSize,
+                offsetX + puzzlePieceWidth / 3f * 2f,
+                offsetY.toFloat()
+            )
 
             path.lineTo(
-                    puzzlePieceBitmapWidth.toFloat(),
-                    offsetY.toFloat())
+                puzzlePieceBitmapWidth.toFloat(),
+                offsetY.toFloat()
+            )
         }
 
         if (rightSidePiece) {
 
             // right side piece
             path.lineTo(
-                    puzzlePieceBitmapWidth.toFloat(),
-                    puzzlePieceBitmapHeight.toFloat())
+                puzzlePieceBitmapWidth.toFloat(),
+                puzzlePieceBitmapHeight.toFloat()
+            )
 
         } else {
 
             // right bump
             path.lineTo(
-                    puzzlePieceBitmapWidth.toFloat(),
-                    offsetY + puzzlePieceHeight / 3f)
+                puzzlePieceBitmapWidth.toFloat(),
+                offsetY + puzzlePieceHeight / 3f
+            )
 
             path.cubicTo(
-                    puzzlePieceBitmapWidth - bumpSize,
-                    offsetY + puzzlePieceHeight / 6f,
-                    puzzlePieceBitmapWidth - bumpSize,
-                    offsetY + puzzlePieceHeight / 6f * 5f,
-                    puzzlePieceBitmapWidth.toFloat(),
-                    offsetY + puzzlePieceHeight / 3f * 2f)
+                puzzlePieceBitmapWidth - bumpSize,
+                offsetY + puzzlePieceHeight / 6f,
+                puzzlePieceBitmapWidth - bumpSize,
+                offsetY + puzzlePieceHeight / 6f * 5f,
+                puzzlePieceBitmapWidth.toFloat(),
+                offsetY + puzzlePieceHeight / 3f * 2f
+            )
 
             path.lineTo(
-                    puzzlePieceBitmapWidth.toFloat(),
-                    puzzlePieceBitmapHeight.toFloat())
+                puzzlePieceBitmapWidth.toFloat(),
+                puzzlePieceBitmapHeight.toFloat()
+            )
         }
 
         if (bottomSidePiece) {
 
             path.lineTo(
-                    offsetX.toFloat(),
-                    puzzlePieceBitmapHeight.toFloat())
+                offsetX.toFloat(),
+                puzzlePieceBitmapHeight.toFloat()
+            )
 
         } else {
 
             // bottom bump
             path.lineTo(
-                    offsetX + puzzlePieceWidth / 3f * 2f,
-                    puzzlePieceBitmapHeight.toFloat())
+                offsetX + puzzlePieceWidth / 3f * 2f,
+                puzzlePieceBitmapHeight.toFloat()
+            )
 
             path.cubicTo(
-                    offsetX + puzzlePieceWidth / 6f * 5f,
-                    puzzlePieceBitmapHeight - bumpSize,
-                    offsetX + puzzlePieceWidth / 6f,
-                    puzzlePieceBitmapHeight - bumpSize,
-                    offsetX + puzzlePieceWidth / 3f,
-                    puzzlePieceBitmapHeight.toFloat())
+                offsetX + puzzlePieceWidth / 6f * 5f,
+                puzzlePieceBitmapHeight - bumpSize,
+                offsetX + puzzlePieceWidth / 6f,
+                puzzlePieceBitmapHeight - bumpSize,
+                offsetX + puzzlePieceWidth / 3f,
+                puzzlePieceBitmapHeight.toFloat()
+            )
 
             path.lineTo(
-                    offsetX.toFloat(),
-                    puzzlePieceBitmapHeight.toFloat())
+                offsetX.toFloat(),
+                puzzlePieceBitmapHeight.toFloat()
+            )
         }
 
         if (leftSidePiece) {
@@ -405,16 +433,18 @@ class PuzzleActivity : AppCompatActivity() {
 
             // left bump
             path.lineTo(
-                    offsetX.toFloat(),
-                    offsetY + puzzlePieceHeight / 3f * 2f)
+                offsetX.toFloat(),
+                offsetY + puzzlePieceHeight / 3f * 2f
+            )
 
             path.cubicTo(
-                    offsetX - bumpSize,
-                    offsetY + puzzlePieceHeight / 6f * 5f,
-                    offsetX - bumpSize,
-                    offsetY + puzzlePieceHeight / 6f,
-                    offsetX.toFloat(),
-                    offsetY + puzzlePieceHeight / 3f)
+                offsetX - bumpSize,
+                offsetY + puzzlePieceHeight / 6f * 5f,
+                offsetX - bumpSize,
+                offsetY + puzzlePieceHeight / 6f,
+                offsetX.toFloat(),
+                offsetY + puzzlePieceHeight / 3f
+            )
 
             path.close()
         }

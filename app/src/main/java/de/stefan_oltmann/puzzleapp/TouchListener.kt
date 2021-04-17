@@ -60,8 +60,10 @@ class TouchListener(private val activity: PuzzleActivity) : OnTouchListener {
                 val diffX = StrictMath.abs(puzzlePieceView.posX - layoutParams.leftMargin)
                 val diffY = StrictMath.abs(puzzlePieceView.posY - layoutParams.topMargin)
 
-                val tolerance = sqrt(view.width.toDouble().pow(2.0)
-                        + view.height.toDouble().pow(2.0)) / 10
+                val tolerance = sqrt(
+                    view.width.toDouble().pow(2.0)
+                            + view.height.toDouble().pow(2.0)
+                ) / 10
 
                 if (diffX <= tolerance && diffY <= tolerance) {
 

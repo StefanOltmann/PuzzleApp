@@ -5,8 +5,8 @@
 ## Download
 
 [<img src="https://github.com/StefanOltmann/PuzzleApp/blob/master/docs/playstore_badge.png"
-      alt="Get it on Google Play"
-      height="80">](https://play.google.com/store/apps/details?id=de.stefan_oltmann.puzzleapp)
+alt="Get it on Google Play"
+height="80">](https://play.google.com/store/apps/details?id=de.stefan_oltmann.puzzleapp)
 
 ## Screenshots
 

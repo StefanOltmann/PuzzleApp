@@ -11,7 +11,7 @@ import android.widget.AdapterView.OnItemClickListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.grid
 import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
@@ -60,13 +60,17 @@ class MainActivity : AppCompatActivity() {
 
     fun onImageFromGalleryClick(view: View?) {
 
-        if (ContextCompat.checkSelfPermission(this,
-                        Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
 
             ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                    REQUEST_PERMISSION_READ_EXTERNAL_STORAGE)
+                this,
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                REQUEST_PERMISSION_READ_EXTERNAL_STORAGE
+            )
 
         } else {
 

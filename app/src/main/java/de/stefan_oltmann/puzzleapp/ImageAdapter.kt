@@ -15,8 +15,9 @@ import java.io.IOException
 import kotlin.math.min
 
 class ImageAdapter(
-        private val context: Context,
-        private var files: Array<String>) : BaseAdapter() {
+    private val context: Context,
+    private var files: Array<String>
+) : BaseAdapter() {
 
     override fun getCount() = files.size
 
