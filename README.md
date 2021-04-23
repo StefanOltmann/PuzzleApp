@@ -1,6 +1,6 @@
 # PuzzleApp
 
-[![CodeFactor](https://www.codefactor.io/repository/github/stefanoltmann/puzzleapp/badge)](https://www.codefactor.io/repository/github/stefanoltmann/puzzleapp)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=StefanOltmann_PuzzleApp&metric=alert_status)](https://sonarcloud.io/dashboard?id=StefanOltmann_PuzzleApp)
 
 ## Download
 
