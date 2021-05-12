@@ -1,6 +1,5 @@
 buildscript {
     ext {
-
         // Dependency versions
         // Must be defined here instead of "gradle.properties" because of
         // https://github.com/dependabot/dependabot-core/issues/1618
