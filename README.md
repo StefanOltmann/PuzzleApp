@@ -1,6 +1,6 @@
 # PuzzleApp
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=PuzzleApp&metric=alert_status)](https://sonarcloud.io/dashboard?id=PuzzleApp)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=puzzleapp&metric=alert_status)](https://sonarcloud.io/dashboard?id=puzzleapp)
 
 ## Download
 
